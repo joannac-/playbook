@@ -73,12 +73,54 @@ WiredTigerPreplog.0000000002
 
 The imporant file here is the `WiredTigerLog.XX` file, which contains the [Write Ahead Log](https://en.wikipedia.org/wiki/Write-ahead_logging) (WAL) as maintained by WiredTiger.
 
+
+## Types of database corruption
+
+### Missing or corrupted MongoDB metadata file
+
+If the MongoDB metadata file contains the information that tracks any options used when creating the collection, any indexes that were associated with the collection and the names of the WiredTiger tables that contain the data. It is not possible to re-create this information from another source.
+
+### Missing or corrupted WiredTiger turtle, metadata and/or version file
+
+The WiredTiger turtle and metadata files 
+
+### Old or mismatching WiredTiger turtle or metadata file
+
+Since the WiredTiger turtle and metadata files reference the content within tables from the database, switching in a different version of the metadata will at best lead to a failure to open the database. At worst can lead to corrupting or removing the data in the database.
+
+### Missing or corrupted MongoDB size storer file
+
+The size storer file contains information that is relied upon by MongoDB. If it is missing or corrupted it will not be possible to access the data in the database.
+
+### Missing collection or index file(s)
+
+Upon startup MongoDB verifies that all expected collections are present. If any collection or index is missing MongoDB will refuse to open a connection to the database. There are steps to allow a database to be opened when there are missing files outlined here https://jira.mongodb.org/browse/HELP-2063
+
 # Solutions
 
-## Resync from a secondary
+The recommended solutions when a database corruption is encountered are outlined below, in priority order:
+
+## Resync from another member of a replica set
+
+This is the most reliable and safest solution; it will reliably restore the data to a consistent state.
+
 ## Revert to a recent backup of data
-## Run WiredTiger salvage utility on WiredTiger metadata file.
+
+Follow the process outlined in our [documentation](https://docs.mongodb.com/v3.2/core/backups/) for restoring from a backup.
+
+## Run the MongoDB repair command
+
+Follow the MongoDB [documentation](https://docs.mongodb.com/manual/reference/method/db.repairDatabase/)
+
+Over time we intend to enhance the repair command to be able to automatically recover from more forms of database corruption.
+
 ## Rebuild the metadata using a custom set of steps
+
+https://jira.mongodb.org/browse/HELP-2063
+
+## Using the WiredTiger salvage command
+
+If all files are present, but there are symptoms of a disk corruption and there is no replica set or backup. It may be possible to retrieve the data using the [WiredTiger salvage](http://source.wiredtiger.com/develop/struct_w_t___s_e_s_s_i_o_n.html#ab3399430e474f7005bd5ea20e6ec7a8e) [command](http://source.wiredtiger.com/develop/command_line.html#util_salvage). Note that running salvage will retrieve all data from a database, potentially including data that has been removed and data that is not yet committed. After salvage has been run, it is necessary to manually validate the consistency of the data.
 
 # Related Articles
 
