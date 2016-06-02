@@ -82,7 +82,9 @@ If the MongoDB metadata file contains the information that tracks any options us
 
 ### Missing or corrupted WiredTiger turtle, metadata and/or version file
 
-The WiredTiger turtle and metadata files 
+The WiredTiger turtle and metadata files are required for WiredTiger to be able to find the tables and the valid content within those tables. If they are no longer valid it is not possible to reliably find the valid data in the database.
+
+The WiredTiger version file is a text file, it can be safely replaced with an equivalent file, as long as it has been created with the same version of WiredTiger.
 
 ### Old or mismatching WiredTiger turtle or metadata file
 
