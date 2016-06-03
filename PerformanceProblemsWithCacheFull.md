@@ -25,7 +25,7 @@ Two thresholds are of note:
   the cache, also increasing operation latencies.
   [Q: **pthread mutex calls** metric?]
 
-See [MemoryUseOverview]
+See [MemoryUseOverview](MemoryUseOverview.md).
 
 ## Diagnosis and prescription
 
