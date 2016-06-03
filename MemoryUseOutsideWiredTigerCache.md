@@ -26,7 +26,7 @@ area.
 
 ## Background
 
-See [MemoryUseOverview].
+See [MemoryUseOverview](MemoryUseOverview.md).
 
 ## Diagnosis and remediation
 
