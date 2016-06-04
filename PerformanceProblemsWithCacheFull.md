@@ -41,7 +41,8 @@ See [MemoryUseOverview](MemoryUseOverview.md).
 ### Disk write bottleneck
 
 * Diagnosis: high proportion of dirty data in cache; *consistent* high disk
-  utilization (bursts of 100% utilization are normal and expected)
+  utilization (bursts of 100% utilization, typically coinciding with checkpoints,
+  are normal and expected)
 
 * Prescription: improve storage performance; throttle workload
 
@@ -58,3 +59,14 @@ See [MemoryUseOverview](MemoryUseOverview.md).
   checkpoint**)
 
 * Remediation: ...
+
+### Extended transaction outside checkpoints
+
+* Symptoms: cache fills at times not necessarily correlated
+  with checkpoints, accompanied by large values for **pages
+  pinned** (note distinction between this metric and **pages
+  pinned by checkpoint**).
+
+* Remediation: escalate for further investigation as mongod
+  is designed to avoid long-running transactions that can
+  create this situation.
