@@ -7,7 +7,8 @@ However there are exceptions, and on occasion bugs have been found in this
 area.
 
 * Overall large memory use: **allocated minus wt cache** metric grows large
-* High water mark: large **heap_size** and **total_free_bytes**.
+* High water mark reflecting a previous large allocation that has subsequently
+  been freed: large **heap_size** and **total_free_bytes**.
 * Memory fragmentation leading to performance issues or out of memory,
   accompanied by following (more-or-less equivalent):
   
