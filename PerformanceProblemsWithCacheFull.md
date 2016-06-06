@@ -36,7 +36,8 @@ See [MemoryUseOverview](MemoryUseOverview.md).
   **modified pages evicted** and **unmodified pages evicted** (typically
   thousands or tens of thousands per second)
 
-* Prescription:
+* Prescription: a specific diagnosis may be difficult. One or more of
+  the following may apply:
 
     * [SERVER-23622](https://jira.mongodb.org/browse/SERVER-23622):
       issue appears to be triggered on the node that a secondary is
