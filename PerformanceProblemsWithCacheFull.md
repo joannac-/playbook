@@ -38,15 +38,15 @@ See [MemoryUseOverview](MemoryUseOverview.md).
 
 * Prescription:
 
-** [SERVER-23622](https://jira.mongodb.org/browse/SERVER-23622): issue
-   appears to be triggered on the node that a secondary is replicating
-   from if the secondary is delayed or lagging.
+    * [SERVER-23622](https://jira.mongodb.org/browse/SERVER-23622):
+      issue appears to be triggered on the node that a secondary is
+      replicating from if the secondary is delayed or lagging.
 
-** [SERVER-22831](https://jira.mongodb.org/browse/SERVER-22831): issue
-   related to idle table. Fixed in 3.0.12, 3.2.5, 3.3.3.
+    * [SERVER-22831](https://jira.mongodb.org/browse/SERVER-22831):
+      issue related to idle table. Fixed in 3.0.12, 3.2.5, 3.3.3.
 
-** [CS-31295](https://jira.mongodb.org/browse/CS-31295): SERVER and/or WT
-   issues TBD.
+    * [CS-31295](https://jira.mongodb.org/browse/CS-31295): SERVER
+      and/or WT issues TBD.
 
 ### Disk write bottleneck
 
