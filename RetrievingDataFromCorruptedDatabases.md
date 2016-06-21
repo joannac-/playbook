@@ -1,6 +1,6 @@
 # Retrieving Data from Corrupted Databases
 
-## Symptoms
+## Problem
 
 When a user attempts to open their database the open fails with an error message indicating that there is data corruption. Or a user encounters an error while using their database indicating a checksum mismatch was detected or an I/O operation failed unexpectedly.
 
@@ -99,7 +99,7 @@ The size storer file contains information that is relied upon by MongoDB. If it 
 
 Upon startup MongoDB verifies that all expected collections are present. If any collection or index is missing MongoDB will refuse to open a connection to the database. There are steps to allow a database to be opened when there are missing files outlined here https://jira.mongodb.org/browse/HELP-2063
 
-## Prescription
+## Remediation
 
 The recommended solutions when a database corruption is encountered are outlined below, in priority order:
 
