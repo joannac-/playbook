@@ -17,7 +17,7 @@ read a consistent version of data in memory.  Certain operations are blocked
 during a checkpoint (such as dropping the WiredTiger table for a collection or
 index), these report success immedately, and are queued internally and retried.
 
-## Diagnosis and Prescription
+## Diagnosis and Remediation
 
 ### Ensure I/O is provisioned appropriately
 
@@ -27,21 +27,21 @@ index), these report success immedately, and are queued internally and retried.
 2.  Look at “tracked dirty bytes in cache” vs total cache size to see how much
     work checkpoint has to do
 
-Prescription: faster disk / higher provisioned IOPS
+Remediation: faster disk / higher provisioned IOPS
 
 ### Checkpoint transaction blocking eviction
 
 High (over 100K) *transaction IDs pinned by a checkpoint* to see how many
 transactions start while a checkpoint is active
 
-Prescription: faster disk / smaller cache / throttle updates
+Remediation: faster disk / smaller cache / throttle updates
 
 ### Reads and writes blocked by the filesystem
 
 The EXT3/4 filesystem can block all I/O for long periods during high write
 loads.
 
-Prescription: Avoid EXT3/4, our production notes recommend XFS.
+Remediation: Avoid EXT3/4, our production notes recommend XFS.
 
 # Related articles
 
