@@ -1,6 +1,6 @@
 # Excess memory allocated outside the WT cache
 
-## Symptoms
+## Problem
 
 Generally memory usage outside the WT cache should remain well bounded.
 However there are exceptions, and on occasion bugs have been found in this

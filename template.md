@@ -9,13 +9,13 @@ whether the article is relevant.
 
 Background information necessary to understand the problem.
 
-## Diagnosis and Prescription
+## Diagnosis and Remediation
 
 ### Symptom 1
 
 Describe specific symptoms (e.g., log lines or patterns in statistics)
 
-Prescription: describe steps to fix / avoid this symptom
+Remediation: describe steps to fix / avoid this symptom
 
 ### Symtom 2
 

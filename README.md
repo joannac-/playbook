@@ -10,7 +10,7 @@ a separate wiki page describing a class of problem with:
 
 -   background
 
--   diagnosis and prescription
+-   diagnosis and remediation
 
 Types of issues to cover:
 

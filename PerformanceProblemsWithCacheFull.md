@@ -1,6 +1,6 @@
 # Performance problems related to high cache utilization
 
-## Symptoms
+## Problem
 
 * Performance declines, including
   * slower operation rates
@@ -27,7 +27,7 @@ Two thresholds are of note:
 
 See [MemoryUseOverview](MemoryUseOverview.md).
 
-## Diagnosis and prescription
+## Diagnosis and remediation
 
 ### WT cache eviction algorithmic issue
 
@@ -36,7 +36,7 @@ See [MemoryUseOverview](MemoryUseOverview.md).
   **modified pages evicted** and **unmodified pages evicted** (typically
   thousands or tens of thousands per second)
 
-* Prescription: a specific diagnosis may be difficult. One or more of
+* Remediation: a specific diagnosis may be difficult. One or more of
   the following may apply:
 
     * [SERVER-23622](https://jira.mongodb.org/browse/SERVER-23622):
@@ -55,13 +55,13 @@ See [MemoryUseOverview](MemoryUseOverview.md).
   utilization (bursts of 100% utilization, typically coinciding with checkpoints,
   are normal and expected)
 
-* Prescription: improve storage performance; throttle workload
+* Remediation: improve storage performance; throttle workload
 
 ### CPU bottleneck related to reconciliation
 
 * Diagnosis: ...
 
-* Prescription: ...
+* Remediation: ...
 
 ### Extended transaction during checkpoints
 
