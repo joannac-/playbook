@@ -11,9 +11,9 @@
 
 ## Background
 
-Generally WT aims to limit cache utilization to 80% of the configured maximum
+Generally WiredTiger aims to limit cache utilization to 80% of the configured maximum
 because the purpose of the cache is to provide a buffer between application
-operations and disk i/o.  When the WT cache usage exceeds 95% of the configured
+operations and disk i/o.  When the WiredTiger cache usage exceeds 95% of the configured
 maximum performance decreases and significant operation latencies will result.
 Two thresholds are of note:
 
@@ -29,7 +29,7 @@ See [MemoryUseOverview](MemoryUseOverview.md).
 
 ## Diagnosis and remediation
 
-### WT cache eviction algorithmic issue
+### WiredTiger cache eviction algorithmic issue
 
 * Diagnosis: high rate of **pages walked for eviction** (typically many
   millions per second) relative to pages evicted, which is sum of
@@ -47,7 +47,7 @@ See [MemoryUseOverview](MemoryUseOverview.md).
       issue related to idle table. Fixed in 3.0.12, 3.2.5, 3.3.3.
 
     * [CS-31295](https://jira.mongodb.org/browse/CS-31295): SERVER
-      and/or WT issues TBD.
+      and/or WiredTiger issues TBD.
 
 ### Disk write bottleneck
 

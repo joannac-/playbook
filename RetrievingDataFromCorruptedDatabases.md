@@ -2,50 +2,52 @@
 
 ## Problem
 
-When a user attempts to open their database the open fails with an error message indicating that there is data corruption. Or a user encounters an error while using their database indicating a checksum mismatch was detected or an I/O operation failed unexpectedly.
+When a user attempts to open their database and the open fails with an error message indicating that there is data corruption. Or a user encounters an error while using their database indicating a checksum mismatch was detected or an I/O operation failed unexpectedly.
 
 Such failures are commonly caused by:
-* Corruption by the underlying file I/O subsystem
-* Misconfigured I/O subsystem - so that it does not allow adequate safety in the face of hard stop and system crashes.
-* Bugs in WiredTiger storage engine
-* Bugs in MongoDB integration layer
+* Corruption of the underlying file storage subsystem
+* Misconfigured I/O subsystem - so that it does not allow adequate safety in the face of hard stop or system crash.
+* A bug in the WiredTiger storage engine
+* A bug in the MongoDB integration layer
 
 ## Background
 
-WiredTiger databases consist of multiple files, it is important to understand the roles of the different files that form part of a WiredTiger database in order to understand the different types of corruption that are possible and subsequently the approaches for recovering data from a corrupted database.
+WiredTiger databases consist of multiple files, it is important to understand the roles of the different files that combine to form a WiredTiger database in order to understand the different types of corruption that are possible and subsequently the approaches for recovering data from a corrupted database.
+
+There is some naming disparity between the WiredTiger storage engine and MongoDB. In MongoDB each mongod instance can contain multiple databases. In WiredTiger all files that form part of a running mongod instance are created in the same WiredTiger database. A consequence of this is that when running MongoDB with WiredTiger all MongoDB databases share the same metadata files. The following explanation refers to database as the WiredTiger database concept - that is all content within a single DB path for a running mongod instance.
 
 ### Files in a WiredTiger database
 
-Every WiredTiger database shares the same structure in terms of files on disk. A newly created MongoDB database consists of:
+Every WiredTiger database shares the same structure in terms of files on disk. A newly created MongoDB database (started with WiredTiger storage engine, without directoryPerDB or journaling) consists of:
 
 ```
-collection-0-601483983079373625.wt
-diagnostic.data
-index-1-601483983079373625.wt
-_mdb_catalog.wt
-mongod.lock
-sizeStorer.wt
-storage.bson
 WiredTiger
 WiredTigerLAS.wt
 WiredTiger.lock
 WiredTiger.turtle
 WiredTiger.wt
+_mdb_catalog.wt
+mongod.lock
+sizeStorer.wt
+collection-0-601483983079373625.wt
+index-1-601483983079373625.wt
+diagnostic.data
+storage.bson
 ```
 
 The important files from that list, in terms of database structure and durability are:
 
-* WiredTiger metadata file
+* The WiredTiger metadata file
 
-  The WiredTiger metadata file is called `WiredTiger.wt`. It tracks information about which collections and indexes (referred to from now on as tables) exist in the database, as well as the most recent durable update (checkpoint) in each of those tables. This is a WiredTiger table that is owned by WiredTiger.
+  The WiredTiger metadata file is called `WiredTiger.wt`. It tracks information about which collections and indexes (referred to from now on as tables) exist in the database, as well as the most recent durable update (checkpoint) in each of those tables. The metadata is a WiredTiger table that is owned by WiredTiger.
 
 * The WiredTiger turtle file
 
-  The WiredTiger turtle file is called `WiredTiger.turtle`. It contains the metadata for the WiredTiger metadata file described above. The turtle file is necessary for WiredTiger to track the most recent consistent durable point in time across all tables. This is a text file that is owned by WiredTiger.
+  The WiredTiger turtle file is called `WiredTiger.turtle`. It contains the metadata for the WiredTiger metadata file described above. The turtle file is necessary for WiredTiger to track the most recent consistent durable point in time across all tables. The turtle file is a text file that is owned by WiredTiger.
 
-* MongoDB metadata file
+* The MongoDB metadata file
 
-  The MongoDB metadata file is called `_mdb_catalog.wt`. It contains information that MongoDB uses to keep metadata for MongoDB collections and indexes, including which WiredTiger table maps to each MongoDB collection or index. This is a WiredTiger table that is owned by MongoDB.
+  The MongoDB metadata file is called `_mdb_catalog.wt`. It contains information that MongoDB uses to keep metadata for MongoDB databases, collections and indexes, including which WiredTiger table maps to each MongoDB collection or index. This is a WiredTiger table that is owned by MongoDB.
 
 * The WiredTiger version file
 
@@ -57,11 +59,11 @@ The important files from that list, in terms of database structure and durabilit
 
 * The MongoDB size tracking file
 
-  The size tracking file is called `sizeStorer.wt`. It contains information about the amount of data currently in each MongoDB collection file. This is a WiredTiger table  that is owned by MongoDB.
+  The size tracking file is called `sizeStorer.wt`. It contains information about the amount of data currently in each MongoDB collection file. This is a WiredTiger table that is owned by MongoDB.
 
 * MongoDB collection and index files
 
-  The MongoDB collection files are called `collection-X-XXX.wt` and index files are called `index-X-XXX.wt`, where the `X` is replaced by an integer. Each MongoDB collection or index is stored in a separate WiredTiger table. The mapping between MongoDB collection names and WiredTiger table names is stored in the MongoDB metadata file. If MongoDB is started with the `--directoryPerDB` option these files may appear in a subdirectory.
+  The MongoDB collection files are called `collection-X-XXX.wt` and index files are called `index-X-XXX.wt`, where the `X` is replaced by an integer. Each MongoDB collection or index is stored in a separate WiredTiger table. The mapping between MongoDB collection names and WiredTiger table names is stored in the MongoDB metadata file. If MongoDB is started with the `--directoryPerDB` option these files may appear in a subdirectory of the dbpath.
 
 * WiredTiger journal files
 
@@ -79,7 +81,7 @@ The important files from that list, in terms of database structure and durabilit
 
 ### Missing or corrupted MongoDB metadata file
 
-If the MongoDB metadata file contains the information that tracks any options used when creating the collection, any indexes that were associated with the collection and the names of the WiredTiger tables that contain the data. It is not possible to re-create this information from another source.
+The MongoDB metadata file contains the information that tracks any options used when creating the collection, any indexes that were associated with the collection and the names of the WiredTiger tables that contain the data. It is not possible to re-create this information from another source.
 
 ### Missing or corrupted WiredTiger turtle, metadata and/or version file
 

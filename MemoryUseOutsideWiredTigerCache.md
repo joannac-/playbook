@@ -1,10 +1,16 @@
-# Excess memory allocated outside the WT cache
+# Excess memory allocated outside the WiredTiger cache
 
 ## Problem
 
-Generally memory usage outside the WT cache should remain well bounded.
-However there are exceptions, and on occasion bugs have been found in this
-area.
+Generally memory usage outside the WiredTiger cache remains well bounded. However there are workloads that are known to consume large amounts of memory outside of the WiredTiger cache, and on occasion bugs that cause excess memory allocation have been found.
+
+## Background
+
+Users of MongoDB sometimes expect that the WiredTiger cache accounts of all memory used by MongoDB - that is not the case. The WiredTiger cache is a component of the WiredTiger storage engine that is used to facilitate access and updates to documents and indexes while minimizing interactions with the backing file system. The cache is generally the largest consumer of memory in a database system, but it is not the only consumer. The remainder of this article discusses how to identify when memory excessive amounts of memory are being allocated outside of the cache, and approaches for reducing the amount of memory being used.
+
+See [MemoryUseOverview](MemoryUseOverview.md).
+
+## Diagnosis and remediation
 
 * Overall large memory use: **allocated minus wt cache** metric grows large
 * High water mark reflecting a previous large allocation that has subsequently
@@ -25,12 +31,6 @@ area.
   unallocated memory can be used for kernel file cache. If free memory becomes
   large this can impact performance, and result in out-of-memory condition.
 
-## Background
-
-See [MemoryUseOverview](MemoryUseOverview.md).
-
-## Diagnosis and remediation
-
 ### Overall large memory usage
 
 Causes: various, tbd
@@ -41,13 +41,13 @@ timeouts; escalate within team for further analysis
 ### High water mark
 
 At some point in the past a large amount of memory was allocated outside
-the WT cache and then freed, resulting in a current large **heap_size** and
+the WiredTiger cache and then freed, resulting in a current large **heap_size** and
 **total_free_bytes**.
 
 * Diagnosis: examine memory usage history since last mongod restart
   (**uptime**) to find high-water mark for **current_allocated_bytes**
 
-* Remediation: see section "Excess memory allocated outside the WT cache"
+* Remediation: see section "Excess memory allocated outside the WiredTiger cache"
 
 ### Memory fragmentation
 
