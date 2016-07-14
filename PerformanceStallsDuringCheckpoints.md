@@ -22,11 +22,19 @@ Remediation: faster disk / higher provisioned IOPS
 
 ### Checkpoint transaction blocking eviction
 
-1. Look at *transaction IDs pinned by a checkpoint* to see how many transactions start while a checkpoint is active. If this value is high (over 100 thousand) AND
+1. Look at *transaction IDs pinned by a checkpoint* to see how many transactions start while a checkpoint is active. If this value plateaus at high value (e.g., over 100 thousand) AND
 2. With *bytes currently in the cache* being similar to *maximum bytes configured* AND
 3. Periodically high values for *checkpoint blocked page eviction* or *pages selected for eviction unable to be evicted*
 
-Remediation: faster disk / smaller cache / throttle updates
+Remediation: faster disk / smaller cache / throttle updates.
+
+If a smaller cache size is unacceptable because of the impact on read performance, consider running
+
+```
+mongod ... --wiredTigerEngineConfigString "eviction_dirty_target=10,eviction_dirty_trigger=20"
+```
+
+This may help by allowing reads to make use of the full cache size but constraining updates to a small fraction of the cache (in this case, between 10% and 20% of the cache size).  That in turn allows checkpoints to complete more quickly, reducing its impact on application operations.
 
 ### Reads and writes blocked by the filesystem
 
