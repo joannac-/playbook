@@ -45,3 +45,5 @@ Remediation: Avoid EXT3/4, our production notes recommend XFS.
 # Related articles
 
 SERVER-22209, SERVER-22199, SERVER-21691, SERVER-21652, SERVER-18314, SERVER-16176, CS-26971
+
+http://source.wiredtiger.com/develop/tune_cache.html#cache_eviction
