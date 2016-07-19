@@ -6,17 +6,17 @@ Generally memory usage outside the WiredTiger cache remains well bounded. Howeve
 
 ## Background
 
-Users of MongoDB sometimes expect that the WiredTiger cache accounts of all memory used by MongoDB - that is not the case. The WiredTiger cache is a component of the WiredTiger storage engine that is used to facilitate access and updates to documents and indexes while minimizing interactions with the backing file system. The cache is generally the largest consumer of memory in a database system, but it is not the only consumer. The remainder of this article discusses how to identify when memory excessive amounts of memory are being allocated outside of the cache, and approaches for reducing the amount of memory being used.
+Users of MongoDB sometimes expect that the WiredTiger cache accounts for all memory used by MongoDB - that is not the case. The WiredTiger cache is a component of the WiredTiger storage engine that is used to facilitate access and updates to documents and indexes while minimizing interactions with the backing file system. The cache is generally the largest consumer of memory in a database system, but it is not the only consumer. The remainder of this article discusses how to identify when memory excessive amounts of memory are being allocated outside of the cache, and approaches for reducing the amount of memory being used.
 
 See [ReferenceMemoryUse](ReferenceMemoryUse.md).
 
 ## Diagnosis and remediation
 
-* Overall large memory use: **allocated minus wt cache** metric grows large
+* Overall large memory use: **allocated** minus **wt cache** metric grows large
 * High water mark reflecting a previous large allocation that has subsequently
   been freed: large **heap_size** and **total_free_bytes**.
 * Memory fragmentation leading to performance issues or out of memory,
-  accompanied by following (more-or-less equivalent):
+  accompanied by the following (more-or-less equivalent):
   
   * **total free memory** (which is the sum of **pageheap_free_bytes**
     and **central_cache_free_bytes**) is large relative to
